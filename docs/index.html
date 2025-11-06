@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluxo de Clientes - Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    h1 {
+      color: #0066cc;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #0066cc;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fluxo de Clientes - Atualização Automática</h1>
+  <p>Os arquivos CSV estão sendo atualizados automaticamente pelo script.</p>
+  <table id="tabela-csv">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function carregarCSV() {
+      try {
+        const response = await fetch('fluxo%20de%20clientes.csv');
+        const csv = await response.text();
+        const linhas = csv.trim().split('\n').map(l => l.split(';'));
+        
+        const tabela = document.getElementById('tabela-csv');
+        const thead = tabela.querySelector('thead');
+        const tbody = tabela.querySelector('tbody');
+        
+        thead.innerHTML = '<tr>' + linhas[0].map(c => `<th>${c}</th>`).join('') + '</tr>';
+        tbody.innerHTML = linhas.slice(1).map(l => 
+          '<tr>' + l.map(c => `<td>${c}</td>`).join('') + '</tr>'
+        ).join('');
+      } catch (e) {
+        document.body.innerHTML += "<p style='color:red;'>Erro ao carregar CSV: " + e + "</p>";
+      }
+    }
+
+    carregarCSV();
+    setInterval(carregarCSV, 30000); // Atualiza a cada 30 segundos
+  </script>
+</body>
+</html>

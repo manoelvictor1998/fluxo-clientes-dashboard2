@@ -1,96 +1,41 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fluxo de Clientes - Dashboard</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background: #f5f5f5;
-      color: #333;
-    }
-    h1 {
-      color: #0066cc;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #0066cc;
-      color: white;
-    }
-    .atualizacao {
-      margin-top: 15px;
-      color: #555;
-      font-size: 14px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Fluxo de Clientes - Atualização Automática</h1>
-  <p>Os arquivos CSV estão sendo atualizados automaticamente pelo script.</p>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel Power BI – Auto Refresh</title>
 
-  <div class="atualizacao" id="ultimaAtualizacao"></div>
+    <!-- Atualização automática a cada 10 minutos (600000 ms) -->
+    <script>
+        setInterval(function () {
+            location.reload();
+        }, 600000); // 10 minutos
+    </script>
 
-  <table id="tabela-csv">
-    <thead></thead>
-    <tbody></tbody>
-  </table>
-
-  <script>
-    async function carregarCSV() {
-      try {
-        const response = await fetch('fluxo%20de%20clientes.csv'); // arquivo dentro de /docs
-        if (!response.ok) throw new Error('Erro ao carregar CSV');
-        const csv = await response.text();
-        const linhas = csv.trim().split('\n').map(l => l.split(';'));
-
-        const tabela = document.getElementById('tabela-csv');
-        const thead = tabela.querySelector('thead');
-        const tbody = tabela.querySelector('tbody');
-
-        // Cabeçalhos
-        thead.innerHTML = '<tr>' + linhas[0].map(c => `<th>${c}</th>`).join('') + '</tr>';
-        // Linhas
-        tbody.innerHTML = linhas.slice(1).map(l =>
-          '<tr>' + l.map(c => `<td>${c}</td>`).join('') + '</tr>'
-        ).join('');
-      } catch (e) {
-        document.body.innerHTML += "<p style='color:red;'>Erro ao carregar CSV: " + e + "</p>";
-      }
-    }
-
-    async function carregarUltimaAtualizacao() {
-      try {
-        const response = await fetch('ultima_atualizacao.txt');
-        if (response.ok) {
-          const texto = await response.text();
-          document.getElementById('ultimaAtualizacao').textContent = texto;
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-      } catch (e) {
-        console.log("Erro ao carregar data:", e);
-      }
-    }
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
 
-    // Carrega tudo
-    carregarCSV();
-    carregarUltimaAtualizacao();
-
-    // Atualiza automaticamente a cada 30 segundos
-    setInterval(() => {
-      carregarCSV();
-      carregarUltimaAtualizacao();
-    }, 30000);
-  </script>
+<body>
+    <iframe 
+        title="Comparativo de fluxo do dia atual"
+        src="https://app.powerbi.com/view?r=eyJrIjoiYmM3N2U4YjQtMGQ5OS00NzU2LWFjY2UtY2Q0MzIxMDhiNGM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9"
+        allowfullscreen="true">
+    </iframe>
 </body>
 </html>

@@ -9,46 +9,62 @@ const paginas = [
 "https://app.powerbi.com/view?r=eyJrIjoiMGUwYWUxMTctZWQ5NC00YTE3LWFjNjItOTk2NzI0Yjk1ZjM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9&pageName=7a904369601358bb6204",
 "https://app.powerbi.com/view?r=eyJrIjoiMGUwYWUxMTctZWQ5NC00YTE3LWFjNjItOTk2NzI0Yjk1ZjM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9&pageName=7313435d4883ab56df77",
 "https://app.powerbi.com/view?r=eyJrIjoiMGUwYWUxMTctZWQ5NC00YTE3LWFjNjItOTk2NzI0Yjk1ZjM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9&pageName=8580eaebc87ae78b7bd5",
-"https://docs.google.com/presentation/d/e/2PACX-1vSFoOQtJDwyfkhA2J-CWTf6MP2RKQRlu_XtJVgpfdsDRve4AVcWU-3blaebX3OoDU4V_xoWA94oNyJZ/pub?start=true&loop=true&delayms=30000"
+"https://docs.google.com/presentation/d/e/2PACX-1vSFoOQtJDwyfkhA2J-CWTf6MP2RKQRlu_XtJVgpfdsDRve4AVcWU-3blaebX3OoDU4V_xoWA94oNyJZ/embed?start=true&loop=true&delayms=30000"
 
 ];
 
-const tempo = 60000;
+const tempo = 120000;
 
 let indice = 0;
 
 const iframe = document.getElementById("dashboard");
 
+// ======================================================
+// TROCA DE DASHBOARD
+// ======================================================
+
 function trocarDashboard(){
 
-    // ==========================================
-    // GOOGLE SLIDES
-    // ==========================================
+    iframe.style.opacity = "0";
 
-    if (paginas[indice].includes("docs.google.com")) {
+    setTimeout(() => {
 
-        iframe.src = paginas[indice];
+        // ==============================================
+        // GOOGLE SLIDES
+        // ==============================================
 
-    }
+        if (paginas[indice].includes("docs.google.com")) {
 
-    // ==========================================
-    // POWER BI
-    // ==========================================
+            iframe.src = paginas[indice];
 
-    else {
+        }
 
-        iframe.src =
-            paginas[indice]
-            + "&cache="
-            + new Date().getTime();
+        // ==============================================
+        // POWER BI
+        // ==============================================
 
-    }
+        else {
 
-    indice++;
+            iframe.src =
+                paginas[indice]
+                + "&cache="
+                + new Date().getTime();
 
-    if(indice >= paginas.length){
-        indice = 0;
-    }
+        }
+
+        iframe.onload = () => {
+
+            iframe.style.opacity = "1";
+
+        };
+
+        indice++;
+
+        if(indice >= paginas.length){
+            indice = 0;
+        }
+
+    }, 500);
 
 }
 
@@ -56,9 +72,9 @@ trocarDashboard();
 
 setInterval(trocarDashboard, tempo);
 
-// ==========================================
+// ======================================================
 // ÚLTIMA ATUALIZAÇÃO
-// ==========================================
+// ======================================================
 
 fetch("ultima_atualizacao.txt")
 

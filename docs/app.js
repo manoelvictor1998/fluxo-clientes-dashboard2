@@ -13,7 +13,7 @@ const paginas = [
 
 ];
 
-const tempo = 120000;
+const tempo = 240000;
 
 let indice = 0;
 

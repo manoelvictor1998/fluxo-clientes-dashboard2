@@ -8,7 +8,8 @@ const paginas = [
 "https://app.powerbi.com/view?r=eyJrIjoiMGUwYWUxMTctZWQ5NC00YTE3LWFjNjItOTk2NzI0Yjk1ZjM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9&pageName=ada99cb16e59020a23e9",
 "https://app.powerbi.com/view?r=eyJrIjoiMGUwYWUxMTctZWQ5NC00YTE3LWFjNjItOTk2NzI0Yjk1ZjM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9&pageName=7a904369601358bb6204",
 "https://app.powerbi.com/view?r=eyJrIjoiMGUwYWUxMTctZWQ5NC00YTE3LWFjNjItOTk2NzI0Yjk1ZjM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9&pageName=7313435d4883ab56df77",
-"https://app.powerbi.com/view?r=eyJrIjoiMGUwYWUxMTctZWQ5NC00YTE3LWFjNjItOTk2NzI0Yjk1ZjM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9&pageName=8580eaebc87ae78b7bd5"
+"https://app.powerbi.com/view?r=eyJrIjoiMGUwYWUxMTctZWQ5NC00YTE3LWFjNjItOTk2NzI0Yjk1ZjM4IiwidCI6IjAwMjhhZGUyLTFmYzMtNDU5Yi04NDJmLTAzNWQxMDRmOGU2ZCJ9&pageName=8580eaebc87ae78b7bd5",
+"https://docs.google.com/presentation/d/e/2PACX-1vSFoOQtJDwyfkhA2J-CWTf6MP2RKQRlu_XtJVgpfdsDRve4AVcWU-3blaebX3OoDU4V_xoWA94oNyJZ/pub?start=true&loop=true&delayms=30000"
 
 ];
 
@@ -20,7 +21,28 @@ const iframe = document.getElementById("dashboard");
 
 function trocarDashboard(){
 
-    iframe.src = paginas[indice];
+    // ==========================================
+    // GOOGLE SLIDES
+    // ==========================================
+
+    if (paginas[indice].includes("docs.google.com")) {
+
+        iframe.src = paginas[indice];
+
+    }
+
+    // ==========================================
+    // POWER BI
+    // ==========================================
+
+    else {
+
+        iframe.src =
+            paginas[indice]
+            + "&cache="
+            + new Date().getTime();
+
+    }
 
     indice++;
 
@@ -34,12 +56,17 @@ trocarDashboard();
 
 setInterval(trocarDashboard, tempo);
 
-// ============================
+// ==========================================
 // ÚLTIMA ATUALIZAÇÃO
-// ============================
+// ==========================================
 
 fetch("ultima_atualizacao.txt")
+
 .then(response => response.text())
+
 .then(data => {
-    document.getElementById("ultimaAtualizacao").innerText = data;
+
+    document.getElementById("ultimaAtualizacao")
+        .innerText = data;
+
 });

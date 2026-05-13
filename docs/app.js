@@ -13,11 +13,41 @@ const paginas = [
 
 ];
 
-const tempo = 240000;
+// ======================================================
+// TEMPOS
+// ======================================================
+
+// POWER BI = 14 minutos
+const tempoPowerBI = 14 * 60 * 1000;
+
+// GOOGLE SLIDES / POWERPOINT = 10 minutos
+const tempoSlides = 10 * 60 * 1000;
 
 let indice = 0;
 
 const iframe = document.getElementById("dashboard");
+
+let timeoutTroca;
+
+// ======================================================
+// IDENTIFICA TIPO DA URL
+// ======================================================
+
+function obterTempo(url) {
+
+    // GOOGLE SLIDES / POWERPOINT ONLINE
+    if (
+        url.includes("docs.google.com")
+        || url.includes("office.com")
+        || url.includes("powerpoint")
+    ) {
+
+        return tempoSlides;
+    }
+
+    // POWER BI
+    return tempoPowerBI;
+}
 
 // ======================================================
 // TROCA DE DASHBOARD
@@ -25,18 +55,25 @@ const iframe = document.getElementById("dashboard");
 
 function trocarDashboard(){
 
+    clearTimeout(timeoutTroca);
+
     iframe.style.opacity = "0";
 
     setTimeout(() => {
 
+        const urlAtual = paginas[indice];
+
         // ==============================================
-        // GOOGLE SLIDES
+        // GOOGLE SLIDES / POWERPOINT ONLINE
         // ==============================================
 
-        if (paginas[indice].includes("docs.google.com")) {
+        if (
+            urlAtual.includes("docs.google.com")
+            || urlAtual.includes("office.com")
+            || urlAtual.includes("powerpoint")
+        ) {
 
-            iframe.src = paginas[indice];
-
+            iframe.src = urlAtual;
         }
 
         // ==============================================
@@ -46,17 +83,21 @@ function trocarDashboard(){
         else {
 
             iframe.src =
-                paginas[indice]
+                urlAtual
                 + "&cache="
                 + new Date().getTime();
-
         }
 
         iframe.onload = () => {
 
             iframe.style.opacity = "1";
-
         };
+
+        // ==============================================
+        // DEFINE TEMPO DINÂMICO
+        // ==============================================
+
+        const tempoAtual = obterTempo(urlAtual);
 
         indice++;
 
@@ -64,13 +105,16 @@ function trocarDashboard(){
             indice = 0;
         }
 
+        timeoutTroca = setTimeout(
+            trocarDashboard,
+            tempoAtual
+        );
+
     }, 500);
 
 }
 
 trocarDashboard();
-
-setInterval(trocarDashboard, tempo);
 
 // ======================================================
 // ÚLTIMA ATUALIZAÇÃO
